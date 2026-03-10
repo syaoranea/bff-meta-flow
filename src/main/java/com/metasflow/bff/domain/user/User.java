@@ -1,0 +1,86 @@
+package com.metasflow.bff.domain.user;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbIgnore;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
+
+import java.util.Collection;
+import java.util.List;
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@DynamoDbBean
+public class User implements UserDetails {
+
+    private String email;
+    private String password;
+    private Role role;
+
+    @DynamoDbPartitionKey
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @Override
+    @DynamoDbIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    @DynamoDbIgnore
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    @DynamoDbIgnore
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    @DynamoDbIgnore
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    @DynamoDbIgnore
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    @DynamoDbIgnore
+    public boolean isEnabled() {
+        return true;
+    }
+}
