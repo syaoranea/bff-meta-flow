@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
     
     private final UserRepository repository;
@@ -17,7 +19,9 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
+        log.info("Attempting to register user with email: {}", request.getEmail());
         if (repository.findByEmail(request.getEmail()).isPresent()) {
+            log.warn("Registration failed: User already exists with email {}", request.getEmail());
             throw new RuntimeException("Usuário já cadastrado com este e-mail");
         }
 
