@@ -19,9 +19,19 @@ import java.util.List;
 @DynamoDbBean
 public class User implements UserDetails {
 
+    private String name;
     private String email;
+    private String goal;
     private String password;
     private Role role;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @DynamoDbPartitionKey
     public String getEmail() {
@@ -30,6 +40,14 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getGoal() {
+        return goal;
+    }
+
+    public void setGoal(String goal) {
+        this.goal = goal;
     }
 
     public String getPassword() {

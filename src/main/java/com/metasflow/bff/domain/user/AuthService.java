@@ -17,9 +17,19 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
+        if (repository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Usuário já cadastrado com este e-mail");
+        }
+
+        String encodedPassword = (request.getPassword() != null && !request.getPassword().isEmpty())
+                ? passwordEncoder.encode(request.getPassword())
+                : passwordEncoder.encode("default_password"); // Or handle as needed
+
         var user = User.builder()
+                .name(request.getName())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .goal(request.getGoal())
+                .password(encodedPassword)
                 .role(Role.USER)
                 .build();
         repository.save(user);
