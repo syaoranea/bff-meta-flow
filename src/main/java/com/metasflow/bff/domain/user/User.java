@@ -24,6 +24,7 @@ public class User implements UserDetails {
     private String email;
     private String goal;
     private String password;
+    private String createdAt;
     private Role role;
 
     public String getUserId() {
@@ -32,6 +33,14 @@ public class User implements UserDetails {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getName() {

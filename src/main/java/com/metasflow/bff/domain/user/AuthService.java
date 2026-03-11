@@ -7,6 +7,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -37,6 +39,7 @@ public class AuthService {
                 .goal(request.getGoal())
                 .password(encodedPassword)
                 .role(Role.USER)
+                .createdAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .build();
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);
