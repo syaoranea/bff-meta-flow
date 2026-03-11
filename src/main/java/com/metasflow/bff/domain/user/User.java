@@ -19,11 +19,20 @@ import java.util.List;
 @DynamoDbBean
 public class User implements UserDetails {
 
+    private String userId;
     private String name;
     private String email;
     private String goal;
     private String password;
     private Role role;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getName() {
         return name;

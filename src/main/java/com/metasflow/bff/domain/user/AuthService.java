@@ -5,8 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class AuthService {
                 : passwordEncoder.encode("default_password"); // Or handle as needed
 
         var user = User.builder()
+                .userId(UUID.randomUUID().toString())
                 .name(request.getName())
                 .email(request.getEmail())
                 .goal(request.getGoal())
