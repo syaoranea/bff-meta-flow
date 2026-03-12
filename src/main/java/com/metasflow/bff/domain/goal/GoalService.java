@@ -27,7 +27,11 @@ public class GoalService {
             log.info("Creating new goal: {} for user: {}", goal.getTitle(), email);
             
             goal.setEmail(email);
-            goal.setId(UUID.randomUUID().toString());
+            // Ensure SK is set (mapping to id if provided, otherwise new UUID)
+            if (goal.getSk() == null) {
+                goal.setSk(UUID.randomUUID().toString());
+            }
+            
             String now = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             goal.setCreatedAt(now);
             goal.setUpdatedAt(now);
@@ -55,16 +59,16 @@ public class GoalService {
         }
     }
 
-    public Goal getGoalById(String id) {
+    public Goal getGoalById(String sk) {
         String email = getCurrentUserEmail();
-        return repository.findById(email, id)
-                .orElseThrow(() -> new RuntimeException("Goal not found with id: " + id + " for user: " + email));
+        return repository.findById(email, sk)
+                .orElseThrow(() -> new RuntimeException("Goal not found with SK: " + sk + " for user: " + email));
     }
 
-    public Goal updateGoal(String id, Goal goalDetails) {
+    public Goal updateGoal(String sk, Goal goalDetails) {
         String email = getCurrentUserEmail();
-        log.info("Updating goal: {} for user: {}", id, email);
-        Goal goal = getGoalById(id);
+        log.info("Updating goal: {} for user: {}", sk, email);
+        Goal goal = getGoalById(sk);
         
         goal.setTitle(goalDetails.getTitle());
         goal.setDescription(goalDetails.getDescription());
@@ -78,9 +82,27 @@ public class GoalService {
         return goal;
     }
 
-    public void deleteGoal(String id) {
+    public Goal patchGoal(String sk, Goal goalDetails) {
         String email = getCurrentUserEmail();
-        log.info("Deleting goal: {} for user: {}", id, email);
-        repository.delete(email, id);
+        log.info("Patching goal: {} for user: {}", sk, email);
+        Goal goal = getGoalById(sk);
+        
+        if (goalDetails.getTitle() != null) goal.setTitle(goalDetails.getTitle());
+        if (goalDetails.getDescription() != null) goal.setDescription(goalDetails.getDescription());
+        if (goalDetails.getTargetValue() != null) goal.setTargetValue(goalDetails.getTargetValue());
+        if (goalDetails.getLevel() != null) goal.setLevel(goalDetails.getLevel());
+        if (goalDetails.getXp() != null) goal.setXp(goalDetails.getXp());
+        if (goalDetails.getStatus() != null) goal.setStatus(goalDetails.getStatus());
+        
+        goal.setUpdatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        
+        repository.save(goal);
+        return goal;
+    }
+
+    public void deleteGoal(String sk) {
+        String email = getCurrentUserEmail();
+        log.info("Deleting goal: {} for user: {}", sk, email);
+        repository.delete(email, sk);
     }
 }

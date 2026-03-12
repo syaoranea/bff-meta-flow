@@ -24,10 +24,10 @@ public class GoalRepository {
         goalTable.putItem(goal);
     }
 
-    public Optional<Goal> findById(String email, String id) {
+    public Optional<Goal> findById(String email, String sk) {
         return Optional.ofNullable(goalTable.getItem(Key.builder()
                 .partitionValue(email)
-                .sortValue(id)
+                .sortValue(sk)
                 .build()));
     }
 
@@ -44,10 +44,10 @@ public class GoalRepository {
                 .collect(Collectors.toList());
     }
 
-    public void delete(String email, String id) {
+    public void delete(String email, String sk) {
         goalTable.deleteItem(Key.builder()
                 .partitionValue(email)
-                .sortValue(id)
+                .sortValue(sk)
                 .build());
     }
 }

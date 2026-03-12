@@ -26,19 +26,24 @@ public class GoalController {
         return ResponseEntity.ok(goalService.getAllGoals());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Goal> getGoalById(@PathVariable String id) {
-        return ResponseEntity.ok(goalService.getGoalById(id));
+    @GetMapping("/{sk}")
+    public ResponseEntity<Goal> getGoalById(@PathVariable String sk) {
+        return ResponseEntity.ok(goalService.getGoalById(sk));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Goal> updateGoal(@PathVariable String id, @RequestBody Goal goal) {
-        return ResponseEntity.ok(goalService.updateGoal(id, goal));
+    @PutMapping("/{sk}")
+    public ResponseEntity<Goal> updateGoal(@PathVariable String sk, @RequestBody Goal goal) {
+        return ResponseEntity.ok(goalService.updateGoal(sk, goal));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGoal(@PathVariable String id) {
-        goalService.deleteGoal(id);
+    @PatchMapping("/{sk}")
+    public ResponseEntity<Goal> patchGoal(@PathVariable String sk, @RequestBody Goal goal) {
+        return ResponseEntity.ok(goalService.patchGoal(sk, goal));
+    }
+
+    @DeleteMapping("/{sk}")
+    public ResponseEntity<Void> deleteGoal(@PathVariable String sk) {
+        goalService.deleteGoal(sk);
         return ResponseEntity.noContent().build();
     }
 }

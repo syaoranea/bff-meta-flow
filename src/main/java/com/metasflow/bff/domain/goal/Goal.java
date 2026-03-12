@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbIgnore;
 
 @Builder
 @NoArgsConstructor
@@ -13,7 +14,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
 @DynamoDbBean
 public class Goal {
 
-    private String id;
+    private String sk; // This is the Sort Key
     private String email;
     private String title;
     private String description;
@@ -25,12 +26,22 @@ public class Goal {
     private String updatedAt;
 
     @DynamoDbSortKey
+    public String getSk() {
+        return sk;
+    }
+
+    public void setSk(String sk) {
+        this.sk = sk;
+    }
+
+    // Compatibility getter/setter for 'id' used by frontend
+    @DynamoDbIgnore
     public String getId() {
-        return id;
+        return sk;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.sk = id;
     }
 
     @DynamoDbPartitionKey
