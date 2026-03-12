@@ -7,6 +7,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbIgnore;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 
 @Builder
 @NoArgsConstructor
@@ -26,6 +27,7 @@ public class Goal {
     private String updatedAt;
 
     @DynamoDbSortKey
+    @DynamoDbAttribute("SK")
     public String getSk() {
         return sk;
     }
@@ -45,6 +47,7 @@ public class Goal {
     }
 
     @DynamoDbPartitionKey
+    @DynamoDbAttribute("email")
     public String getEmail() {
         return email;
     }
