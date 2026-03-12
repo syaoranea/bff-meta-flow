@@ -49,4 +49,9 @@ public class AuthController {
     public ResponseEntity<User> getMe() {
         return ResponseEntity.ok(service.getCurrentUser());
     }
+
+    @PatchMapping("/me")
+    public ResponseEntity<User> updateMe(@RequestBody UpdateProfileRequest request) {
+        return ResponseEntity.ok(service.updateProfile(request));
+    }
 }

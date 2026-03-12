@@ -80,6 +80,25 @@ public class AuthService {
                 });
     }
 
+    public User updateProfile(UpdateProfileRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Updating profile for user: {}", email);
+        
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (request.getName() != null) {
+            user.setName(request.getName());
+        }
+        if (request.getGoal() != null) {
+            user.setGoal(request.getGoal());
+        }
+
+        repository.save(user);
+        log.info("Profile updated successfully for user: {}", email);
+        return user;
+    }
+
     public List<User> debugGetAllUsers() {
         return repository.findAll();
     }
