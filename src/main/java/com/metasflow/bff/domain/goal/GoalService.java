@@ -1,6 +1,5 @@
 package com.metasflow.bff.domain.goal;
 
-import com.metasflow.bff.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,12 +17,16 @@ public class GoalService {
 
     private final GoalRepository repository;
 
+    private String getCurrentUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     public Goal createGoal(Goal goal) {
         try {
-            String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-            log.info("Creating new goal: {} for user: {}", goal.getTitle(), currentUserEmail);
+            String email = getCurrentUserEmail();
+            log.info("Creating new goal: {} for user: {}", goal.getTitle(), email);
             
-            goal.setUserId(currentUserEmail); // Use email as userId linked to partition key of users table
+            goal.setEmail(email);
             goal.setId(UUID.randomUUID().toString());
             String now = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             goal.setCreatedAt(now);
@@ -43,29 +46,29 @@ public class GoalService {
 
     public List<Goal> getAllGoals() {
         try {
-            String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-            log.info("Fetching all goals for user: {}", currentUserEmail);
-            return repository.findByUserId(currentUserEmail);
+            String email = getCurrentUserEmail();
+            log.info("Fetching all goals for user: {}", email);
+            return repository.findByEmail(email);
         } catch (Exception e) {
             log.error("Error listing goals: {}", e.getMessage(), e);
             throw e;
         }
     }
 
-    public List<Goal> getGoalsByUserId(String userId) {
-        return repository.findByUserId(userId);
-    }
-
     public Goal getGoalById(String id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Goal not found with id: " + id));
+        String email = getCurrentUserEmail();
+        return repository.findById(email, id)
+                .orElseThrow(() -> new RuntimeException("Goal not found with id: " + id + " for user: " + email));
     }
 
     public Goal updateGoal(String id, Goal goalDetails) {
-        log.info("Updating goal: {}", id);
+        String email = getCurrentUserEmail();
+        log.info("Updating goal: {} for user: {}", id, email);
         Goal goal = getGoalById(id);
         
         goal.setTitle(goalDetails.getTitle());
+        goal.setDescription(goalDetails.getDescription());
+        goal.setTargetValue(goalDetails.getTargetValue());
         goal.setLevel(goalDetails.getLevel());
         goal.setXp(goalDetails.getXp());
         goal.setStatus(goalDetails.getStatus());
@@ -76,7 +79,8 @@ public class GoalService {
     }
 
     public void deleteGoal(String id) {
-        log.info("Deleting goal: {}", id);
-        repository.delete(id);
+        String email = getCurrentUserEmail();
+        log.info("Deleting goal: {} for user: {}", id, email);
+        repository.delete(email, id);
     }
 }

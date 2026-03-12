@@ -24,22 +24,30 @@ public class GoalRepository {
         goalTable.putItem(goal);
     }
 
-    public Optional<Goal> findById(String id) {
-        return Optional.ofNullable(goalTable.getItem(Key.builder().partitionValue(id).build()));
+    public Optional<Goal> findById(String email, String id) {
+        return Optional.ofNullable(goalTable.getItem(Key.builder()
+                .partitionValue(email)
+                .sortValue(id)
+                .build()));
     }
 
     public List<Goal> findAll() {
         return goalTable.scan().items().stream().collect(Collectors.toList());
     }
 
-    public List<Goal> findByUserId(String userId) {
-        // Simple scan for now, should ideally use a GSI for userId
-        return goalTable.scan().items().stream()
-                .filter(goal -> userId.equals(goal.getUserId()))
+    public List<Goal> findByEmail(String email) {
+        return goalTable.query(QueryConditional.keyEqualTo(Key.builder()
+                .partitionValue(email)
+                .build()))
+                .items()
+                .stream()
                 .collect(Collectors.toList());
     }
 
-    public void delete(String id) {
-        goalTable.deleteItem(Key.builder().partitionValue(id).build());
+    public void delete(String email, String id) {
+        goalTable.deleteItem(Key.builder()
+                .partitionValue(email)
+                .sortValue(id)
+                .build());
     }
 }
