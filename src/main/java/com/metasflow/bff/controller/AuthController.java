@@ -39,6 +39,11 @@ public class AuthController {
         return ResponseEntity.ok(service.login(request));
     }
 
+    @GetMapping("/debug/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(service.debugGetAllUsers());
+    }
+
     @GetMapping("/me")
     public ResponseEntity<User> getMe() {
         return ResponseEntity.ok(service.getCurrentUser());

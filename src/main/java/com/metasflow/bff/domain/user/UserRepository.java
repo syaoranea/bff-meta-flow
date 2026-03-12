@@ -7,6 +7,8 @@ import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
 import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class UserRepository {
@@ -24,5 +26,9 @@ public class UserRepository {
 
     public void save(User user) {
         userTable.putItem(user);
+    }
+
+    public List<User> findAll() {
+        return userTable.scan().items().stream().collect(Collectors.toList());
     }
 }

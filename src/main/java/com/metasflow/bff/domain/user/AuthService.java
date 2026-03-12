@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -77,5 +78,9 @@ public class AuthService {
                     log.error("User not found in database for email: {}", email);
                     return new RuntimeException("Usuário não encontrado");
                 });
+    }
+
+    public List<User> debugGetAllUsers() {
+        return repository.findAll();
     }
 }
