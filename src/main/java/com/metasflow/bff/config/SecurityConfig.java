@@ -33,7 +33,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/register")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/login")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/health")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/debug/**")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/me")).authenticated()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/health")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/error")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/goals/**")).authenticated()
