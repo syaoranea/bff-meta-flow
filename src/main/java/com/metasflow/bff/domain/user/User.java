@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbIgnore;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Collection;
 import java.util.List;
@@ -68,6 +69,7 @@ public class User implements UserDetails {
         this.goal = goal;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

@@ -2,20 +2,22 @@ package com.metasflow.bff.domain.user;
 
 import com.metasflow.bff.config.JwtService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.UUID;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import lombok.extern.slf4j.Slf4j;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
-    
+
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -30,7 +32,7 @@ public class AuthService {
 
         String encodedPassword = (request.getPassword() != null && !request.getPassword().isEmpty())
                 ? passwordEncoder.encode(request.getPassword())
-                : passwordEncoder.encode("default_password"); // Or handle as needed
+                : passwordEncoder.encode("default_password");
 
         var user = User.builder()
                 .userId(UUID.randomUUID().toString())
@@ -61,5 +63,11 @@ public class AuthService {
         return AuthResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public User getCurrentUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 }
