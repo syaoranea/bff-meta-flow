@@ -42,6 +42,7 @@ public class AuthService {
                 .goal(request.getGoal())
                 .password(encodedPassword)
                 .role(Role.USER)
+                .accessFirst(true)
                 .createdAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .build();
         repository.save(user);
@@ -92,6 +93,9 @@ public class AuthService {
         }
         if (request.getGoal() != null) {
             user.setGoal(request.getGoal());
+        }
+        if (request.getAccessFirst() != null) {
+            user.setAccessFirst(request.getAccessFirst());
         }
 
         repository.save(user);

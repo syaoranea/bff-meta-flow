@@ -27,6 +27,15 @@ public class User implements UserDetails {
     private String password;
     private String createdAt;
     private Role role;
+    private Boolean accessFirst;
+
+    public Boolean getAccessFirst() {
+        return accessFirst;
+    }
+
+    public void setAccessFirst(Boolean accessFirst) {
+        this.accessFirst = accessFirst;
+    }
 
     public String getUserId() {
         return userId;
