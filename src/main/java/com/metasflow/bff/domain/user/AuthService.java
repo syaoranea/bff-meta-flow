@@ -67,7 +67,15 @@ public class AuthService {
 
     public User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Fetching profile for user: {}", email);
         return repository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .map(user -> {
+                    log.info("User found in database: {}", user.getEmail());
+                    return user;
+                })
+                .orElseThrow(() -> {
+                    log.error("User not found in database for email: {}", email);
+                    return new RuntimeException("Usuário não encontrado");
+                });
     }
 }
