@@ -28,6 +28,15 @@ public class User implements UserDetails {
     private String createdAt;
     private Role role;
     private Boolean accessFirst;
+    private String profession;
+
+    public String getProfession() {
+        return profession;
+    }
+
+    public void setProfession(String profession) {
+        this.profession = profession;
+    }
 
     public Boolean getAccessFirst() {
         return accessFirst;

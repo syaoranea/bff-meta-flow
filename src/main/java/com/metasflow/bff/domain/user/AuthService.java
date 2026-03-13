@@ -97,6 +97,9 @@ public class AuthService {
         if (request.getAccessFirst() != null) {
             user.setAccessFirst(request.getAccessFirst());
         }
+        if (request.getProfession() != null) {
+            user.setProfession(request.getProfession());
+        }
 
         repository.save(user);
         log.info("Profile updated successfully for user: {}", email);

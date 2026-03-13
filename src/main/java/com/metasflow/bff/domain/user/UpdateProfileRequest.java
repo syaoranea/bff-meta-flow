@@ -13,4 +13,5 @@ public class UpdateProfileRequest {
     private String name;
     private String goal;
     private Boolean accessFirst;
+    private String profession;
 }
