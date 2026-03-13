@@ -23,7 +23,7 @@ public class User implements UserDetails {
     private String userId;
     private String name;
     private String email;
-    private String goal;
+    private String suggestion;
     private String password;
     private String createdAt;
     private Role role;
@@ -79,12 +79,13 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public String getGoal() {
-        return goal;
+    @DynamoDbAttribute("goal")
+    public String getSuggestion() {
+        return suggestion;
     }
 
-    public void setGoal(String goal) {
-        this.goal = goal;
+    public void setSuggestion(String suggestion) {
+        this.suggestion = suggestion;
     }
 
     @JsonIgnore

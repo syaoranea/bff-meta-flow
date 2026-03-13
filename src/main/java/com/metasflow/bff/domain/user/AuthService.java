@@ -39,7 +39,7 @@ public class AuthService {
                 .userId(UUID.randomUUID().toString())
                 .name(request.getName())
                 .email(request.getEmail())
-                .goal(request.getGoal())
+                .suggestion(request.getSuggestion())
                 .password(encodedPassword)
                 .role(Role.USER)
                 .accessFirst(true)
@@ -91,8 +91,8 @@ public class AuthService {
         if (request.getName() != null) {
             user.setName(request.getName());
         }
-        if (request.getGoal() != null) {
-            user.setGoal(request.getGoal());
+        if (request.getSuggestion() != null) {
+            user.setSuggestion(request.getSuggestion());
         }
         if (request.getAccessFirst() != null) {
             user.setAccessFirst(request.getAccessFirst());

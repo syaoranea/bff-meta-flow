@@ -1,4 +1,4 @@
-package com.metasflow.bff.domain.goal;
+package com.metasflow.bff.domain.suggestion;
 
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
@@ -12,31 +12,32 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class GoalRepository {
+public class SuggestionRepository {
 
-    private final DynamoDbTable<Goal> goalTable;
+    private final DynamoDbTable<Suggestion> suggestionTable;
 
-    public GoalRepository(DynamoDbEnhancedClient enhancedClient) {
-        this.goalTable = enhancedClient.table("metasflow", TableSchema.fromBean(Goal.class));
+    public SuggestionRepository(DynamoDbEnhancedClient enhancedClient) {
+        // Table name remains "metasflow" as requested
+        this.suggestionTable = enhancedClient.table("metasflow", TableSchema.fromBean(Suggestion.class));
     }
 
-    public void save(Goal goal) {
-        goalTable.putItem(goal);
+    public void save(Suggestion suggestion) {
+        suggestionTable.putItem(suggestion);
     }
 
-    public Optional<Goal> findById(String email, String sk) {
-        return Optional.ofNullable(goalTable.getItem(Key.builder()
+    public Optional<Suggestion> findById(String email, String sk) {
+        return Optional.ofNullable(suggestionTable.getItem(Key.builder()
                 .partitionValue(email)
                 .sortValue(sk)
                 .build()));
     }
 
-    public List<Goal> findAll() {
-        return goalTable.scan().items().stream().collect(Collectors.toList());
+    public List<Suggestion> findAll() {
+        return suggestionTable.scan().items().stream().collect(Collectors.toList());
     }
 
-    public List<Goal> findByEmail(String email) {
-        return goalTable.query(QueryConditional.keyEqualTo(Key.builder()
+    public List<Suggestion> findByEmail(String email) {
+        return suggestionTable.query(QueryConditional.keyEqualTo(Key.builder()
                 .partitionValue(email)
                 .build()))
                 .items()
@@ -45,7 +46,7 @@ public class GoalRepository {
     }
 
     public void delete(String email, String sk) {
-        goalTable.deleteItem(Key.builder()
+        suggestionTable.deleteItem(Key.builder()
                 .partitionValue(email)
                 .sortValue(sk)
                 .build());

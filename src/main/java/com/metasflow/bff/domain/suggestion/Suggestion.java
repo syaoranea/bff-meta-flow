@@ -1,4 +1,4 @@
-package com.metasflow.bff.domain.goal;
+package com.metasflow.bff.domain.suggestion;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttri
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamoDbBean
-public class Goal {
+public class Suggestion {
 
     private String sk; // This is the Sort Key
     private String email;

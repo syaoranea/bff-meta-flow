@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateProfileRequest {
     private String name;
-    private String goal;
+    private String suggestion;
     private Boolean accessFirst;
     private String profession;
 }
