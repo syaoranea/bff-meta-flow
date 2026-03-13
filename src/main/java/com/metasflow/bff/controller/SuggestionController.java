@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/suggestions")
 @CrossOrigin(origins = "*")
+@Slf4j
 public class SuggestionController {
 
     private final SuggestionService suggestionService;
