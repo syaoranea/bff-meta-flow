@@ -3,6 +3,7 @@ package com.metasflow.bff.controller;
 import com.metasflow.bff.domain.suggestion.Suggestion;
 import com.metasflow.bff.domain.suggestion.SuggestionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/suggestions")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class SuggestionController {
 
