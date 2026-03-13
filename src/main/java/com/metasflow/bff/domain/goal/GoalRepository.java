@@ -25,25 +25,25 @@ public class GoalRepository {
         goalTable.putItem(goal);
     }
 
-    public Optional<Goal> findById(String email, String sk) {
+    public Optional<Goal> findById(String pk, String sk) {
         return Optional.ofNullable(goalTable.getItem(Key.builder()
-                .partitionValue(email)
+                .partitionValue(pk)
                 .sortValue(sk)
                 .build()));
     }
 
-    public List<Goal> findByEmail(String email) {
+    public List<Goal> findByPk(String pk) {
         return goalTable.query(QueryConditional.keyEqualTo(Key.builder()
-                .partitionValue(email)
+                .partitionValue(pk)
                 .build()))
                 .items()
                 .stream()
                 .collect(Collectors.toList());
     }
 
-    public void delete(String email, String sk) {
+    public void delete(String pk, String sk) {
         goalTable.deleteItem(Key.builder()
-                .partitionValue(email)
+                .partitionValue(pk)
                 .sortValue(sk)
                 .build());
     }

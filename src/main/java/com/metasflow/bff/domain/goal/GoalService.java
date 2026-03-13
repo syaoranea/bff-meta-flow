@@ -16,26 +16,30 @@ import java.util.UUID;
 public class GoalService {
 
     private final GoalRepository repository;
+    private final com.metasflow.bff.domain.user.AuthService authService;
 
-    private String getCurrentUserEmail() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+    private String getPk() {
+        var user = authService.getCurrentUser();
+        return "USER#" + user.getUserId();
     }
 
     public Goal createGoal(Goal goal) {
-        String email = getCurrentUserEmail();
-        log.info("Creating new goal: {} for user: {}", goal.getTitle(), email);
+        String pk = getPk();
+        log.info("Creating new goal: {} for user PK: {}", goal.getTitle(), pk);
         
-        goal.setEmail(email);
-        if (goal.getSk() == null) {
-            goal.setSk(UUID.randomUUID().toString());
+        goal.setPk(pk);
+        if (goal.getSk() == null || !goal.getSk().startsWith("GOAL#")) {
+            goal.setSk("GOAL#" + UUID.randomUUID().toString());
         }
         
-        String now = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        goal.setCreatedAt(now);
-        goal.setUpdatedAt(now);
+        goal.setType("goal");
         
-        if (goal.getStatus() == null) {
-            goal.setStatus("active");
+        if (goal.getCreatedAt() == null) {
+            goal.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
+        }
+        
+        if (goal.getProgress() == null) {
+            goal.setProgress(0);
         }
         
         repository.save(goal);
@@ -43,38 +47,34 @@ public class GoalService {
     }
 
     public List<Goal> getAllGoals() {
-        String email = getCurrentUserEmail();
-        log.info("Fetching all goals for user: {}", email);
-        return repository.findByEmail(email);
+        String pk = getPk();
+        log.info("Fetching all goals for user PK: {}", pk);
+        return repository.findByPk(pk);
     }
 
     public Goal getGoalById(String sk) {
-        String email = getCurrentUserEmail();
-        return repository.findById(email, sk)
-                .orElseThrow(() -> new RuntimeException("Goal not found with SK: " + sk + " for user: " + email));
+        String pk = getPk();
+        // Ensure sk is formatted
+        String formattedSk = sk.startsWith("GOAL#") ? sk : "GOAL#" + sk;
+        return repository.findById(pk, formattedSk)
+                .orElseThrow(() -> new RuntimeException("Goal not found with SK: " + formattedSk + " for user PK: " + pk));
     }
 
     public Goal patchGoal(String sk, Goal goalDetails) {
-        String email = getCurrentUserEmail();
-        log.info("Patching goal: {} for user: {}", sk, email);
         Goal goal = getGoalById(sk);
+        log.info("Patching goal: {} for user PK: {}", goal.getSk(), goal.getPk());
         
         if (goalDetails.getTitle() != null) goal.setTitle(goalDetails.getTitle());
-        if (goalDetails.getDescription() != null) goal.setDescription(goalDetails.getDescription());
-        if (goalDetails.getTargetValue() != null) goal.setTargetValue(goalDetails.getTargetValue());
-        if (goalDetails.getLevel() != null) goal.setLevel(goalDetails.getLevel());
-        if (goalDetails.getXp() != null) goal.setXp(goalDetails.getXp());
-        if (goalDetails.getStatus() != null) goal.setStatus(goalDetails.getStatus());
-        
-        goal.setUpdatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        if (goalDetails.getProgress() != null) goal.setProgress(goalDetails.getProgress());
         
         repository.save(goal);
         return goal;
     }
 
     public void deleteGoal(String sk) {
-        String email = getCurrentUserEmail();
-        log.info("Deleting goal: {} for user: {}", sk, email);
-        repository.delete(email, sk);
+        String pk = getPk();
+        String formattedSk = sk.startsWith("GOAL#") ? sk : "GOAL#" + sk;
+        log.info("Deleting goal: {} for user PK: {}", formattedSk, pk);
+        repository.delete(pk, formattedSk);
     }
 }

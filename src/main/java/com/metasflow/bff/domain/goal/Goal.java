@@ -15,16 +15,22 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttri
 @DynamoDbBean
 public class Goal {
 
-    private String sk; // This is the Sort Key
-    private String email;
+    private String pk; // PK
+    private String sk; // SK
+    private String type; // fixed "goal"
     private String title;
-    private String description;
-    private Integer targetValue;
-    private Integer level;
-    private Integer xp;
-    private String status;
+    private Integer progress;
     private String createdAt;
-    private String updatedAt;
+
+    @DynamoDbPartitionKey
+    @DynamoDbAttribute("PK")
+    public String getPk() {
+        return pk;
+    }
+
+    public void setPk(String pk) {
+        this.pk = pk;
+    }
 
     @DynamoDbSortKey
     @DynamoDbAttribute("SK")
@@ -36,26 +42,16 @@ public class Goal {
         this.sk = sk;
     }
 
-    // Compatibility getter/setter for 'id' used by frontend
-    @DynamoDbIgnore
-    public String getId() {
-        return sk;
+    @DynamoDbAttribute("type")
+    public String getType() {
+        return type;
     }
 
-    public void setId(String id) {
-        this.sk = id;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    @DynamoDbPartitionKey
-    @DynamoDbAttribute("email")
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    @DynamoDbAttribute("title")
     public String getTitle() {
         return title;
     }
@@ -64,59 +60,21 @@ public class Goal {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    @DynamoDbAttribute("progress")
+    public Integer getProgress() {
+        return progress;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setProgress(Integer progress) {
+        this.progress = progress;
     }
 
-    public Integer getTargetValue() {
-        return targetValue;
-    }
-
-    public void setTargetValue(Integer targetValue) {
-        this.targetValue = targetValue;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public Integer getXp() {
-        return xp;
-    }
-
-    public void setXp(Integer xp) {
-        this.xp = xp;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
+    @DynamoDbAttribute("created_at")
     public String getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }
