@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/health")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/error")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/suggestions"), AntPathRequestMatcher.antMatcher("/api/suggestions/**")).authenticated()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/goals"), AntPathRequestMatcher.antMatcher("/api/goals/**")).authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
