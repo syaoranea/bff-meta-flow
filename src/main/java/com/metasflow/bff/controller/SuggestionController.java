@@ -16,6 +16,11 @@ public class SuggestionController {
 
     private final SuggestionService suggestionService;
 
+    public SuggestionController(SuggestionService suggestionService) {
+        this.suggestionService = suggestionService;
+        log.info("SuggestionController initialized and mapped to /api/suggestions");
+    }
+
     @PostMapping
     public ResponseEntity<Suggestion> createSuggestion(@RequestBody Suggestion suggestion) {
         return ResponseEntity.ok(suggestionService.createSuggestion(suggestion));
