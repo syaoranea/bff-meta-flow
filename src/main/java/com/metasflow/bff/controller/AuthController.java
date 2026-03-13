@@ -4,6 +4,7 @@ import com.metasflow.bff.domain.user.AuthResponse;
 import com.metasflow.bff.domain.user.AuthService;
 import com.metasflow.bff.domain.user.LoginRequest;
 import com.metasflow.bff.domain.user.RegisterRequest;
+import com.metasflow.bff.domain.user.UpdateProfileRequest;
 import com.metasflow.bff.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
