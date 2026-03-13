@@ -8,6 +8,7 @@ import com.metasflow.bff.domain.user.UpdateProfileRequest;
 import com.metasflow.bff.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -54,5 +55,13 @@ public class AuthController {
     @PatchMapping("/me")
     public ResponseEntity<User> updateMe(@RequestBody UpdateProfileRequest request) {
         return ResponseEntity.ok(service.updateProfile(request));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout() {
+        SecurityContextHolder.clearContext();
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Logged out successfully");
+        return ResponseEntity.ok(response);
     }
 }

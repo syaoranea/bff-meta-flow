@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/health")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/debug/**")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/me")).authenticated()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/logout")).authenticated()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/health")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/error")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/suggestions"), AntPathRequestMatcher.antMatcher("/api/suggestions/**")).authenticated()
