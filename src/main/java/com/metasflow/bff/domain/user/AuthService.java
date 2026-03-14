@@ -26,7 +26,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
-        log.info("Attempting to register user with email: {}", request.getEmail());
+        log.info("Attempting to register user with email: {}. Suggestion value: '{}'", request.getEmail(), request.getSuggestion());
         if (repository.findByEmail(request.getEmail()).isPresent()) {
             log.warn("Registration failed: User already exists with email {}", request.getEmail());
             throw new RuntimeException("Usuário já cadastrado com este e-mail");
