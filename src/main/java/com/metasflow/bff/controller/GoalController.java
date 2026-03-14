@@ -2,6 +2,7 @@ package com.metasflow.bff.controller;
 
 import com.metasflow.bff.domain.goal.Goal;
 import com.metasflow.bff.domain.goal.GoalService;
+import com.metasflow.bff.domain.goal.ProgressRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,12 @@ public class GoalController {
     @PostMapping
     public ResponseEntity<Goal> createGoal(@RequestBody Goal goal) {
         return ResponseEntity.ok(goalService.createGoal(goal));
+    }
+
+    @PostMapping("/progress")
+    public ResponseEntity<Void> registerProgress(@RequestBody ProgressRequest request) {
+        goalService.registerProgress(request);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

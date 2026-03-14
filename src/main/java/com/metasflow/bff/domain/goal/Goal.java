@@ -139,4 +139,65 @@ public class Goal {
     public void setSuccessRate(Double successRate) {
         this.successRate = successRate;
     }
+
+    private String goalId;
+    private String subgoalId;
+    private Integer xp;
+    private Integer current;
+    private Integer longest;
+    private String lastActivity;
+
+    @DynamoDbAttribute("goal_id")
+    public String getGoalId() {
+        return goalId;
+    }
+
+    public void setGoalId(String goalId) {
+        this.goalId = goalId;
+    }
+
+    @DynamoDbAttribute("subgoal_id")
+    public String getSubgoalId() {
+        return subgoalId;
+    }
+
+    public void setSubgoalId(String subgoalId) {
+        this.subgoalId = subgoalId;
+    }
+
+    @DynamoDbAttribute("xp")
+    public Integer getXp() {
+        return xp;
+    }
+
+    public void setXp(Integer xp) {
+        this.xp = xp;
+    }
+
+    @DynamoDbAttribute("current")
+    public Integer getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Integer current) {
+        this.current = current;
+    }
+
+    @DynamoDbAttribute("longest")
+    public Integer getLongest() {
+        return longest;
+    }
+
+    public void setLongest(Integer longest) {
+        this.longest = longest;
+    }
+
+    @DynamoDbAttribute("last_activity")
+    public String getLastActivity() {
+        return lastActivity;
+    }
+
+    public void setLastActivity(String lastActivity) {
+        this.lastActivity = lastActivity;
+    }
 }

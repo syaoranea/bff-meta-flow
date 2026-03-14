@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -101,6 +102,78 @@ public class GoalService {
         
         repository.save(goal);
         return goal;
+    }
+
+    public void registerProgress(ProgressRequest request) {
+        String userPk = getPk();
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String today = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+        // 1. Register the completion event
+        Goal event = Goal.builder()
+                .pk(userPk)
+                .sk("EVENT#" + timestamp)
+                .type("subgoal_completed")
+                .goalId(request.getGoalId())
+                .subgoalId(request.getSubgoalId())
+                .xp(request.getXp())
+                .createdAt(today)
+                .build();
+        repository.save(event);
+        log.info("Progress registered for user {}: Subgoal {} of Goal {} completed", userPk, request.getSubgoalId(), request.getGoalId());
+
+        // 2. Update Streak
+        updateStreak(userPk, today);
+    }
+
+    private void updateStreak(String userPk, String today) {
+        Goal streak = repository.findById(userPk, "STREAK").orElse(null);
+        LocalDate todayDate = LocalDate.parse(today);
+
+        if (streak == null) {
+            log.info("Creating new streak for user {}", userPk);
+            streak = Goal.builder()
+                    .pk(userPk)
+                    .sk("STREAK")
+                    .type("STREAK")
+                    .current(1)
+                    .longest(1)
+                    .lastActivity(today)
+                    .build();
+            repository.save(streak);
+        } else {
+            String lastActivityStr = streak.getLastActivity();
+            if (lastActivityStr == null) {
+                // Should not happen if created through here, but safety first
+                streak.setCurrent(1);
+                streak.setLastActivity(today);
+                repository.save(streak);
+                return;
+            }
+
+            LocalDate lastActivityDate = LocalDate.parse(lastActivityStr);
+
+            if (lastActivityDate.equals(todayDate)) {
+                log.info("Streak already updated today for user {}", userPk);
+                return; // Already updated today
+            }
+
+            if (lastActivityDate.plusDays(1).equals(todayDate)) {
+                // Consecutive day
+                streak.setCurrent(streak.getCurrent() + 1);
+                if (streak.getCurrent() > streak.getLongest()) {
+                    streak.setLongest(streak.getCurrent());
+                }
+                log.info("Streak incremented to {} for user {}", streak.getCurrent(), userPk);
+            } else {
+                // Broke the streak
+                streak.setCurrent(1);
+                log.info("Streak reset for user {}", userPk);
+            }
+
+            streak.setLastActivity(today);
+            repository.save(streak);
+        }
     }
 
     public void deleteGoal(String sk, String pk) {
