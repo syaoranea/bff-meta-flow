@@ -108,4 +108,35 @@ public class Goal {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    private Integer frequency;
+    private Boolean auto;
+    private Double successRate;
+
+    @DynamoDbAttribute("frequency")
+    public Integer getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(Integer frequency) {
+        this.frequency = frequency;
+    }
+
+    @DynamoDbAttribute("auto")
+    public Boolean getAuto() {
+        return auto;
+    }
+
+    public void setAuto(Boolean auto) {
+        this.auto = auto;
+    }
+
+    @DynamoDbAttribute("success_rate")
+    public Double getSuccessRate() {
+        return successRate;
+    }
+
+    public void setSuccessRate(Double successRate) {
+        this.successRate = successRate;
+    }
 }

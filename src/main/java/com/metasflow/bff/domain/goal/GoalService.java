@@ -95,6 +95,9 @@ public class GoalService {
         if (goalDetails.getCategory() != null) goal.setCategory(goalDetails.getCategory());
         if (goalDetails.getDeadline() != null) goal.setDeadline(goalDetails.getDeadline());
         if (goalDetails.getDescription() != null) goal.setDescription(goalDetails.getDescription());
+        if (goalDetails.getFrequency() != null) goal.setFrequency(goalDetails.getFrequency());
+        if (goalDetails.getAuto() != null) goal.setAuto(goalDetails.getAuto());
+        if (goalDetails.getSuccessRate() != null) goal.setSuccessRate(goalDetails.getSuccessRate());
         
         repository.save(goal);
         return goal;
