@@ -20,6 +20,7 @@ import java.util.List;
 public class AuthService {
 
     private final UserRepository repository;
+    private final com.metasflow.bff.domain.goal.GoalRepository goalRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -46,6 +47,21 @@ public class AuthService {
                 .createdAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .build();
         repository.save(user);
+
+        // If a suggestion (goal) is provided, create a record in the goals table
+        if (request.getSuggestion() != null && !request.getSuggestion().isEmpty()) {
+            var goal = com.metasflow.bff.domain.goal.Goal.builder()
+                    .pk("USER#" + user.getUserId())
+                    .sk("GOAL#" + UUID.randomUUID().toString())
+                    .type("goal")
+                    .title(request.getSuggestion())
+                    .progress(0)
+                    .createdAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                    .build();
+            goalRepository.save(goal);
+            log.info("Primary goal created for user: {}", user.getEmail());
+        }
+
         var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder()
                 .token(jwtToken)
