@@ -200,4 +200,35 @@ public class Goal {
     public void setLastActivity(String lastActivity) {
         this.lastActivity = lastActivity;
     }
+
+    private Integer completedDays;
+    private String lastCompletedDate;
+    private Integer count;
+
+    @DynamoDbAttribute("completed_days")
+    public Integer getCompletedDays() {
+        return completedDays;
+    }
+
+    public void setCompletedDays(Integer completedDays) {
+        this.completedDays = completedDays;
+    }
+
+    @DynamoDbAttribute("last_completed_date")
+    public String getLastCompletedDate() {
+        return lastCompletedDate;
+    }
+
+    public void setLastCompletedDate(String lastCompletedDate) {
+        this.lastCompletedDate = lastCompletedDate;
+    }
+
+    @DynamoDbAttribute("count")
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 }

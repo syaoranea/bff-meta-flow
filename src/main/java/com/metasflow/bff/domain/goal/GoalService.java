@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 @Service
@@ -122,8 +125,76 @@ public class GoalService {
         repository.save(event);
         log.info("Progress registered for user {}: Subgoal {} of Goal {} completed", userPk, request.getSubgoalId(), request.getGoalId());
 
-        // 2. Update Streak
+        // 2. Update Subgoal Success Rate
+        updateSubgoalSuccessRate(request.getGoalId(), request.getSubgoalId(), today);
+
+        // 3. Update Aggregate Events
+        updateAggregateEvents(userPk, today);
+
+        // 4. Update Streak
         updateStreak(userPk, today);
+    }
+
+    private void updateSubgoalSuccessRate(String goalId, String subgoalId, String today) {
+        // goalId is the parent SK (PK of subgoal), subgoalId is the SK of subgoal
+        Goal subgoal = repository.findById(goalId, subgoalId).orElse(null);
+        if (subgoal == null) {
+            log.warn("Subgoal not found: {} with parent {}", subgoalId, goalId);
+            return;
+        }
+
+        if (subgoal.getCreatedAt() == null) {
+            log.warn("Subgoal creation date not found: {}", subgoalId);
+            return;
+        }
+
+        LocalDate creationDate = LocalDate.parse(subgoal.getCreatedAt());
+        LocalDate todayDate = LocalDate.parse(today);
+        long totalDaysSinceCreation = ChronoUnit.DAYS.between(creationDate, todayDate) + 1;
+
+        if (subgoal.getCompletedDays() == null) subgoal.setCompletedDays(0);
+
+        if (!today.equals(subgoal.getLastCompletedDate())) {
+            subgoal.setCompletedDays(subgoal.getCompletedDays() + 1);
+            subgoal.setLastCompletedDate(today);
+        }
+
+        double successRate = ((double) subgoal.getCompletedDays() / totalDaysSinceCreation) * 100.0;
+        subgoal.setSuccessRate(Math.round(successRate * 10.0) / 10.0); // Round to 1 decimal place
+
+        repository.save(subgoal);
+        log.info("Subgoal {} success rate updated to {}% ({} days / {} total)", 
+            subgoalId, subgoal.getSuccessRate(), subgoal.getCompletedDays(), totalDaysSinceCreation);
+    }
+
+    private void updateAggregateEvents(String userPk, String today) {
+        LocalDate todayDate = LocalDate.parse(today);
+        int year = todayDate.getYear();
+        int month = todayDate.getMonthValue();
+        int week = todayDate.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+
+        String weekSk = String.format("EVENT#WEEK#%d#%02d", year, week);
+        String monthSk = String.format("EVENT#MONTH#%d#%02d", year, month);
+        String yearSk = String.format("EVENT#YEAR#%d", year);
+
+        incrementAggregate(userPk, weekSk, "EVENT_WEEK");
+        incrementAggregate(userPk, monthSk, "EVENT_MONTH");
+        incrementAggregate(userPk, yearSk, "EVENT_YEAR");
+    }
+
+    private void incrementAggregate(String userPk, String sk, String type) {
+        Goal aggregate = repository.findById(userPk, sk).orElse(null);
+        if (aggregate == null) {
+            aggregate = Goal.builder()
+                    .pk(userPk)
+                    .sk(sk)
+                    .type(type)
+                    .count(1)
+                    .build();
+        } else {
+            aggregate.setCount((aggregate.getCount() == null ? 0 : aggregate.getCount()) + 1);
+        }
+        repository.save(aggregate);
     }
 
     private void updateStreak(String userPk, String today) {
