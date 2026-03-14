@@ -29,8 +29,13 @@ public class GoalController {
     }
 
     @GetMapping("/{sk}")
-    public ResponseEntity<Goal> getGoalById(@PathVariable String sk) {
-        return ResponseEntity.ok(goalService.getGoalById(sk));
+    public ResponseEntity<Goal> getGoalById(@PathVariable String sk, @RequestParam(required = false) String pk) {
+        return ResponseEntity.ok(goalService.getGoalById(pk, sk));
+    }
+
+    @GetMapping("/{sk}/subgoals")
+    public ResponseEntity<List<Goal>> getSubgoals(@PathVariable String sk) {
+        return ResponseEntity.ok(goalService.getSubgoals(sk));
     }
 
     @PatchMapping("/{sk}")
@@ -39,8 +44,8 @@ public class GoalController {
     }
 
     @DeleteMapping("/{sk}")
-    public ResponseEntity<Void> deleteGoal(@PathVariable String sk) {
-        goalService.deleteGoal(sk);
+    public ResponseEntity<Void> deleteGoal(@PathVariable String sk, @RequestParam(required = false) String pk) {
+        goalService.deleteGoal(sk, pk);
         return ResponseEntity.noContent().build();
     }
 }
