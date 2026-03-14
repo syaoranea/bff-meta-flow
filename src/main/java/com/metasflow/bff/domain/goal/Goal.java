@@ -77,4 +77,35 @@ public class Goal {
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
+
+    private String category;
+    private String deadline;
+    private String description;
+
+    @DynamoDbAttribute("category")
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    @DynamoDbAttribute("deadline")
+    public String getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
+
+    @DynamoDbAttribute("description")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

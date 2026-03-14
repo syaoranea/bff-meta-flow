@@ -66,6 +66,9 @@ public class GoalService {
         
         if (goalDetails.getTitle() != null) goal.setTitle(goalDetails.getTitle());
         if (goalDetails.getProgress() != null) goal.setProgress(goalDetails.getProgress());
+        if (goalDetails.getCategory() != null) goal.setCategory(goalDetails.getCategory());
+        if (goalDetails.getDeadline() != null) goal.setDeadline(goalDetails.getDeadline());
+        if (goalDetails.getDescription() != null) goal.setDescription(goalDetails.getDescription());
         
         repository.save(goal);
         return goal;
