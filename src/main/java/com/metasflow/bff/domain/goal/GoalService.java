@@ -62,7 +62,23 @@ public class GoalService {
     public List<Goal> getAllGoals() {
         String pk = getPk();
         log.info("Fetching all top-level goals for user PK: {}", pk);
-        return repository.findByPk(pk);
+        return repository.findByPk(pk).stream()
+                .filter(g -> "goal".equals(g.getType()))
+                .toList();
+    }
+
+    public List<Goal> getEvents() {
+        String pk = getPk();
+        log.info("Fetching all events for user PK: {}", pk);
+        return repository.findByPk(pk).stream()
+                .filter(g -> g.getType() != null && (g.getType().startsWith("EVENT_") || "subgoal_completed".equals(g.getType())))
+                .toList();
+    }
+
+    public Goal getStreak() {
+        String pk = getPk();
+        log.info("Fetching streak for user PK: {}", pk);
+        return repository.findById(pk, "STREAK").orElse(null);
     }
 
     public List<Goal> getSubgoals(String parentSk) {

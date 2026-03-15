@@ -35,6 +35,16 @@ public class GoalController {
         return ResponseEntity.ok(goalService.getAllGoals());
     }
 
+    @GetMapping("/events")
+    public ResponseEntity<List<Goal>> getEvents() {
+        return ResponseEntity.ok(goalService.getEvents());
+    }
+
+    @GetMapping("/streak")
+    public ResponseEntity<Goal> getStreak() {
+        return ResponseEntity.ok(goalService.getStreak());
+    }
+
     @GetMapping("/{sk}")
     public ResponseEntity<Goal> getGoalById(@PathVariable String sk, @RequestParam(required = false) String pk) {
         return ResponseEntity.ok(goalService.getGoalById(pk, sk));
