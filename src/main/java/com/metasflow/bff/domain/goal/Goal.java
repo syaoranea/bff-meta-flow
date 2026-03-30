@@ -3,6 +3,7 @@ package com.metasflow.bff.domain.goal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
@@ -70,6 +71,7 @@ public class Goal {
     }
 
     @DynamoDbAttribute("created_at")
+    @JsonProperty("created_at")
     public String getCreatedAt() {
         return createdAt;
     }
@@ -132,6 +134,7 @@ public class Goal {
     }
 
     @DynamoDbAttribute("success_rate")
+    @JsonProperty("success_rate")
     public Double getSuccessRate() {
         return successRate;
     }
@@ -148,6 +151,7 @@ public class Goal {
     private String lastActivity;
 
     @DynamoDbAttribute("goal_id")
+    @JsonProperty("goal_id")
     public String getGoalId() {
         return goalId;
     }
@@ -157,6 +161,7 @@ public class Goal {
     }
 
     @DynamoDbAttribute("subgoal_id")
+    @JsonProperty("subgoal_id")
     public String getSubgoalId() {
         return subgoalId;
     }
@@ -193,6 +198,7 @@ public class Goal {
     }
 
     @DynamoDbAttribute("last_activity")
+    @JsonProperty("last_activity")
     public String getLastActivity() {
         return lastActivity;
     }
@@ -206,6 +212,7 @@ public class Goal {
     private Integer count;
 
     @DynamoDbAttribute("completed_days")
+    @JsonProperty("completed_days")
     public Integer getCompletedDays() {
         return completedDays;
     }
@@ -215,6 +222,7 @@ public class Goal {
     }
 
     @DynamoDbAttribute("last_completed_date")
+    @JsonProperty("last_completed_date")
     public String getLastCompletedDate() {
         return lastCompletedDate;
     }

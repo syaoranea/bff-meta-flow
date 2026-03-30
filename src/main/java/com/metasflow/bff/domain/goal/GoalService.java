@@ -55,6 +55,10 @@ public class GoalService {
             goal.setProgress(0);
         }
         
+        if (goal.getAuto() == null) {
+            goal.setAuto(false);
+        }
+
         repository.save(goal);
         return goal;
     }
