@@ -31,7 +31,19 @@ public class GoalService {
         String pk = goal.getPk();
         
         if (pk == null || pk.isEmpty() || pk.startsWith("USER#")) {
-            pk = getPk();
+            var user = authService.getCurrentUser();
+            
+            // Check limits for FREE plan
+            if (user.getPlan() == SubscriptionPlan.FREE) {
+                long goalCount = repository.findByPk("USER#" + user.getUserId()).stream()
+                        .filter(g -> "goal".equals(g.getType()))
+                        .count();
+                if (goalCount >= 2) {
+                    throw new RuntimeException("Limite de metas atingido no plano gratuito. Faça upgrade para o plano Premium para criar metas ilimitadas.");
+                }
+            }
+
+            pk = "USER#" + user.getUserId();
             goal.setPk(pk);
             goal.setType("goal");
             if (goal.getSk() == null || !goal.getSk().startsWith("GOAL#")) {

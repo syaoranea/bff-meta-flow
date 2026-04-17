@@ -43,6 +43,7 @@ public class AuthService {
                 .suggestion(request.getSuggestion())
                 .password(encodedPassword)
                 .role(Role.USER)
+                .plan(SubscriptionPlan.FREE)
                 .accessFirst(true)
                 .createdAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .build();
@@ -119,6 +120,20 @@ public class AuthService {
 
         repository.save(user);
         log.info("Profile updated successfully for user: {}", email);
+        return user;
+    }
+
+    public User upgradePlan() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Upgrading plan for user: {}", email);
+        
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        user.setPlan(SubscriptionPlan.PREMIUM);
+        repository.save(user);
+        
+        log.info("User {} upgraded to PREMIUM", email);
         return user;
     }
 

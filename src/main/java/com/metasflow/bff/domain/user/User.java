@@ -29,7 +29,16 @@ public class User implements UserDetails {
     private String createdAt;
     private Role role;
     private Boolean accessFirst;
+    private SubscriptionPlan plan;
     private String profession;
+
+    public SubscriptionPlan getPlan() {
+        return plan == null ? SubscriptionPlan.FREE : plan;
+    }
+
+    public void setPlan(SubscriptionPlan plan) {
+        this.plan = plan;
+    }
 
     public String getProfession() {
         return profession;

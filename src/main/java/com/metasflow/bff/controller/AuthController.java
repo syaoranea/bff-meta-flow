@@ -57,6 +57,12 @@ public class AuthController {
         return ResponseEntity.ok(service.updateProfile(request));
     }
 
+    @PostMapping("/upgrade")
+    @CrossOrigin(origins = "*")
+    public ResponseEntity<User> upgrade() {
+        return ResponseEntity.ok(service.upgradePlan());
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout() {
         SecurityContextHolder.clearContext();

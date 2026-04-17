@@ -16,6 +16,7 @@ import java.util.UUID;
 public class SuggestionService {
 
     private final SuggestionRepository repository;
+    private final com.metasflow.bff.domain.user.UserRepository userRepository;
 
     private String getCurrentUserEmail() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
@@ -26,6 +27,17 @@ public class SuggestionService {
             String email = getCurrentUserEmail();
             log.info("Creating new suggestion: {} for user: {}", suggestion.getTitle(), email);
             
+            var user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+            // Check limits for FREE plan
+            if (user.getPlan() == com.metasflow.bff.domain.user.SubscriptionPlan.FREE) {
+                long count = repository.findByEmail(email).size();
+                if (count >= 2) {
+                    throw new RuntimeException("Limite de ferramentas atingido no plano gratuito. Faça upgrade para o plano Premium para criar ferramentas ilimitadas.");
+                }
+            }
+
             suggestion.setEmail(email);
             if (suggestion.getSk() == null) {
                 suggestion.setSk(UUID.randomUUID().toString());
